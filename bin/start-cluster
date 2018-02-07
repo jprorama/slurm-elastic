@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# start elasticsearch cluster
+#SBATCH --job-name es-cluster
+#
+# Don't run on MIC nodes to avoid virtual nets
+#SBATCH --exclude c0095,c0096
+
+# get cluster host details
+host=`hostname`
+
+# report connection details
+echo "Run this command to access ports of cluster:" > connection.info
+echo "" >> connection.info
+echo "  ssh -L 9200:$host:9200 -L 5601:$host:5601  cheaha.rc.uab.edu" >> connection.info
+echo "" >> connection.info
+echo "Connect to this url in your browser:" >> connection.info
+echo "  http://localhost:5601" >> connection.info
+
+# start cluster
+srun --multi-prog etc/elastic-job.conf
